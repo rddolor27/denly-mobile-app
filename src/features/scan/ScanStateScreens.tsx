@@ -22,7 +22,6 @@ type Actions = {
   onImport: () => void;
 };
 
-/** Camera permission denied: say so, deep-link to Settings, and offer Import photo instead. */
 export function CameraDenied({ onClose, onImport, onOpenSettings }: Actions & { onOpenSettings: () => void }) {
   return (
     <Screen scroll={false} edges={['top', 'bottom']} contentClassName="gap-5 px-6 pb-6 pt-2">
@@ -63,7 +62,6 @@ function TipRow({ icon, text }: { icon: LucideIcon; text: string }) {
   );
 }
 
-/** "Nothing recognised": what usually fixes it, then Rescan (primary) or Import photo. */
 export function NothingRecognised({ onClose, onImport, onRescan }: Actions & { onRescan: () => void }) {
   return (
     <Screen edges={['top', 'bottom']} contentClassName="gap-6">

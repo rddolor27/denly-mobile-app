@@ -28,17 +28,17 @@ import {
   hasRichData,
   ingredientName,
 } from '@/features/demo/demo-state';
+import { Toast } from '@/features/toast/Toast';
+import { useToast } from '@/features/toast/use-toast';
 
 import { bandCountsLine, ingredientsFoundTitle, resultsBack } from './scan-flow';
 import { NoteBox, SaveToggle } from './ScanParts';
-import { Toast, useToast } from './Toast';
 
 const BANDS: readonly ConfidenceBand[] = ['detected', 'likely', 'uncertain'];
 
 type IngredientListProps = {
   ids: readonly IngredientId[];
   scanId: string;
-  /** Offline without data: names only, rows not pressable. */
   namesOnly: boolean;
 };
 
@@ -84,7 +84,7 @@ function BandSection({ scan, band, namesOnly }: { scan: DemoScan; band: Confiden
       <ConfidenceLabel band={band} variant="header" count={ids.length} />
       {collapsible && !open ? (
         <Pressable
-          className="min-h-13 flex-row items-center gap-3 rounded-lg border border-dashed border-border px-4 active:bg-accent"
+          className="min-h-13 flex-row items-center gap-3 rounded-lg border border-dashed border-dash px-4 active:bg-accent"
           onPress={() => setOpen(true)}
           accessibilityRole="button"
           accessibilityState={{ expanded: false }}
@@ -137,7 +137,7 @@ function SummarySection({ scan }: { scan: DemoScan }) {
     );
   } else {
     body = (
-      <View className="gap-2 rounded-lg border border-dashed border-border p-4">
+      <View className="gap-2 rounded-lg border border-dashed border-dash p-4">
         <Text variant="headline" role="heading">
           AI summary needs a connection.
         </Text>
@@ -177,7 +177,6 @@ function ScanNotFound() {
   );
 }
 
-/** Results: ingredients by confidence, AI summary, dishes, unknowns, Rescan. */
 export function ResultsScreen() {
   const params = useLocalSearchParams<{ scanId: string; from?: string }>();
   const demo = useDemo();
@@ -197,6 +196,14 @@ export function ResultsScreen() {
     toast.show(saved ? 'Removed from saved.' : 'Scan saved.');
   }
 
+  function goBack(): void {
+    // A fresh scan has no `from`: plain back would land on whichever tab opened the camera,
+    // not the Home the label promises.
+    if (params.from === undefined) router.dismissTo('/(tabs)');
+    else if (router.canGoBack()) router.back();
+    else router.replace(back.route);
+  }
+
   return (
     <View className="flex-1">
       <Screen
@@ -209,10 +216,7 @@ export function ResultsScreen() {
         }
       >
         <ScreenHeader
-          back={{
-            label: back.label,
-            onPress: () => (router.canGoBack() ? router.back() : router.replace(back.route)),
-          }}
+          back={{ label: back.label, onPress: goBack }}
           right={
             <SaveToggle saved={saved} saveLabel="Save scan" removeLabel="Remove scan from saved" onPress={toggleSave} />
           }

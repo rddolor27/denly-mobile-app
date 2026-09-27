@@ -7,9 +7,8 @@ import { ingredientName } from '@/features/demo/demo-state';
 import { cn } from '@/lib/utils';
 
 /**
- * SIMULATED viewfinder (frontend-only demo): abstract produce shapes on the counter and the live
- * detection boxes from the prototype. The real preview is react-native-vision-camera with an
- * overlay drawn from normalised boxes (ADR 0004); this stands in until the detector exists.
+ * SIMULATED viewfinder (frontend-only demo). The real preview is react-native-vision-camera with
+ * an overlay drawn from normalised boxes (ADR 0004); this stands in until the detector exists.
  * Produce colours are presentation-only hex, fixed in both modes like the camera surface.
  */
 const SHAPES: readonly ViewStyle[] = [
@@ -33,7 +32,6 @@ type Detection = {
   ingredientId: IngredientId;
   box: ViewStyle;
   label: ViewStyle;
-  /** Low confidence: dashed box and a "?" after the name. */
   uncertain?: boolean;
 };
 
@@ -70,13 +68,12 @@ const CORNERS: readonly { style: ViewStyle; className: string }[] = [
 
 type Props = {
   language: NameLanguage;
-  /** Boxes show once the (simulated) detector has warmed up. */
   showDetections: boolean;
   reduceMotion: boolean;
   torch: boolean;
 };
 
-/** The whole viewfinder layer. Decorative for screen readers: the "N items in view" pill speaks. */
+/** Decorative for screen readers: the "N items in view" pill speaks instead. */
 export function Viewfinder({ language, showDetections, reduceMotion, torch }: Props) {
   const [opacity] = useState(() => new Animated.Value(0));
 

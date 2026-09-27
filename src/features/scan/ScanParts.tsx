@@ -10,14 +10,11 @@ import { cn } from '@/lib/utils';
 
 type SaveToggleProps = {
   saved: boolean;
-  /** "Save scan" / "Save ingredient". */
   saveLabel: string;
-  /** "Remove scan from saved" / "Remove from saved". */
   removeLabel: string;
   onPress: () => void;
 };
 
-/** The bookmark toggle in a screen header: filled and tinted when saved, labelled by its action. */
 export function SaveToggle({ saved, saveLabel, removeLabel, onPress }: SaveToggleProps) {
   return (
     <Button
@@ -40,7 +37,6 @@ export function SaveToggle({ saved, saveLabel, removeLabel, onPress }: SaveToggl
 
 export type Definition = { term: string; value: string };
 
-/** Term / value rows in a grouped list ("Filipino · Kangkong", "Category · Leafy green"). */
 export function DefinitionList({ rows, className }: { rows: readonly Definition[]; className?: string }) {
   return (
     <ListGroup {...(className ? { className } : {})}>
@@ -59,7 +55,6 @@ export function DefinitionList({ rows, className }: { rows: readonly Definition[
   );
 }
 
-/** A soft grey note box (tips, "Couldn't identify"). */
 export function NoteBox({ children, className }: { children: ReactNode; className?: string }) {
   return <View className={cn('flex-row gap-3 rounded-lg bg-muted px-4 py-3.5', className)}>{children}</View>;
 }

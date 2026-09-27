@@ -1,6 +1,6 @@
 import { Stack } from 'expo-router';
 
-/** The scan flow: full screen, no tab bar (camera → processing → results → ingredient). */
+/** A stack outside (tabs), so the scan flow is full screen without the tab bar. */
 export default function ScanLayout() {
   return <Stack screenOptions={{ headerShown: false }} />;
 }

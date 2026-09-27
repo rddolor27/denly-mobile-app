@@ -8,7 +8,13 @@ import { IngredientScreen } from './ingredient.screen';
 import { ResultsScreen } from './results.screen';
 
 jest.mock('expo-router', () => ({
-  router: { push: jest.fn(), replace: jest.fn(), back: jest.fn(), canGoBack: jest.fn(() => true) },
+  router: {
+    push: jest.fn(),
+    replace: jest.fn(),
+    back: jest.fn(),
+    dismissTo: jest.fn(),
+    canGoBack: jest.fn(() => true),
+  },
   useLocalSearchParams: jest.fn(() => ({})),
   useFocusEffect: jest.fn(),
 }));
@@ -116,6 +122,26 @@ describe('ResultsScreen', () => {
     expect(screen.getByRole('heading', { name: 'See details offline' })).toBeOnTheScreen();
     expect(screen.queryByText('You could cook')).toBeNull();
     expect(screen.queryByRole('button', { name: 'Get AI summary' })).toBeNull();
+  });
+
+  it('goes Home after a new scan, whichever tab opened the camera', async () => {
+    params({ scanId: 's1' });
+    const user = userEvent.setup();
+    await renderScreen(<ResultsScreen />);
+
+    await user.press(screen.getByRole('button', { name: 'Back to Home' }));
+    expect(router.dismissTo).toHaveBeenCalledWith('/(tabs)');
+    expect(router.back).not.toHaveBeenCalled();
+  });
+
+  it('goes back to the list a past scan was opened from', async () => {
+    params({ scanId: 's1', from: 'history' });
+    const user = userEvent.setup();
+    await renderScreen(<ResultsScreen />);
+
+    await user.press(screen.getByRole('button', { name: 'Back to History' }));
+    expect(router.back).toHaveBeenCalled();
+    expect(router.dismissTo).not.toHaveBeenCalled();
   });
 
   it('says so when the scan does not exist', async () => {

@@ -9,16 +9,17 @@ import { OfflineBanner } from '@/components/denly/OfflineBanner';
 import { Icon } from '@/components/ui/icon';
 import { Text } from '@/components/ui/text';
 import { useDemo } from '@/features/demo/demo-provider';
+import { Toast } from '@/features/toast/Toast';
+import { useToast } from '@/features/toast/use-toast';
 import { logger } from '@/lib/logger';
 import { cn } from '@/lib/utils';
 
 import { leaveScanFlow } from './scan-flow';
 import { CameraDenied } from './ScanStateScreens';
-import { Toast, useToast } from './Toast';
 import { useReduceMotion } from './use-reduce-motion';
 import { LIVE_DETECTIONS, Viewfinder } from './Viewfinder';
 
-/** How long the simulated detector takes before live boxes appear (prototype: 450 ms). */
+/** How long the simulated detector takes before live boxes appear. */
 export const WARM_UP_MS = 450;
 const FLASH_MS = 180;
 
@@ -34,7 +35,6 @@ function openSettings(): void {
   });
 }
 
-/** Round glass button over the viewfinder (44pt). */
 function GlassButton({
   label,
   onPress,
@@ -50,7 +50,7 @@ function GlassButton({
     <Pressable
       className={cn(
         'size-11 items-center justify-center rounded-full active:opacity-70',
-        selected ? 'bg-camera-foreground' : 'bg-camera/65',
+        selected ? 'bg-secondary' : 'bg-camera/65',
       )}
       onPress={onPress}
       accessibilityRole="button"
@@ -119,7 +119,7 @@ function LiveCamera({ notice }: { notice: string | undefined }) {
           selected={torch}
           onPress={() => setTorch((value) => !value)}
         >
-          <Icon as={torch ? Flashlight : FlashlightOff} size={20} className={torch ? 'text-camera' : 'text-camera-foreground'} />
+          <Icon as={torch ? Flashlight : FlashlightOff} size={20} className={torch ? 'text-primary' : 'text-camera-foreground'} />
         </GlassButton>
       </View>
 
@@ -178,10 +178,7 @@ function LiveCamera({ notice }: { notice: string | undefined }) {
   );
 }
 
-/**
- * Scan (camera). Simulated viewfinder for the frontend-only app; `?state=denied` shows the
- * "Camera access is off" screen, `?notice=cancelled` confirms a cancelled scan.
- */
+/** `?state=denied` shows "Camera access is off"; `?notice=cancelled` confirms a cancelled scan. */
 export function CameraScreen() {
   const params = useLocalSearchParams<{ state?: string; notice?: string }>();
   if (params.state === 'denied') {

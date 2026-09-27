@@ -15,7 +15,7 @@ import type { ScanOutcome } from '@/features/demo/demo-state';
 import { ingredientsFoundTitle, leaveScanFlow, PROCESSING_TIMING, processingStages, type ProcessingStage } from './scan-flow';
 import { NothingRecognised } from './ScanStateScreens';
 
-/** Produce shapes in the photo thumbnail (presentation-only colours, as on the viewfinder). */
+/** Presentation-only produce colours, like the viewfinder's. */
 const THUMB_SHAPES: readonly ViewStyle[] = [
   { left: 18, top: 44, width: 64, height: 20, backgroundColor: '#4A6A35', transform: [{ rotate: '-12deg' }] },
   { left: 88, top: 62, width: 32, height: 32, backgroundColor: '#8A3A2C' },
@@ -46,15 +46,13 @@ type RunProps = {
   onEmpty: () => void;
 };
 
-/**
- * One simulated scan run: stages advance on the prototype's timings, then the scan is added and
- * the results open. The connection and outcome are read once, when the run starts.
- */
+/** A simulated scan run. The connection, outcome and session are read once, when the run starts. */
 function ScanRun({ onEmpty }: RunProps) {
   const demo = useDemo();
-  const [run] = useState<{ stages: ProcessingStage[]; outcome: ScanOutcome }>(() => ({
+  const [run] = useState<{ stages: ProcessingStage[]; outcome: ScanOutcome; signedIn: boolean }>(() => ({
     stages: processingStages({ online: demo.online, pack: demo.pack }),
     outcome: demo.nextOutcome,
+    signedIn: demo.session?.kind === 'user',
   }));
   const [current, setCurrent] = useState(0);
   const [slow, setSlow] = useState(false);
@@ -67,7 +65,7 @@ function ScanRun({ onEmpty }: RunProps) {
   });
 
   useEffect(() => {
-    const { stages, outcome } = run;
+    const { stages, outcome, signedIn } = run;
     const timers: ReturnType<typeof setTimeout>[] = [];
     const later = (fn: () => void, ms: number): void => {
       timers.push(setTimeout(fn, ms));
@@ -86,7 +84,9 @@ function ScanRun({ onEmpty }: RunProps) {
         return;
       }
       setCurrent(stages.length);
-      AccessibilityInfo.announceForAccessibility(`Scan complete. ${ingredientsFoundTitle(scan.items.length)}.`);
+      AccessibilityInfo.announceForAccessibility(
+        `Scan complete. ${ingredientsFoundTitle(scan.items.length)}.${signedIn ? ' Added to your history.' : ''}`,
+      );
       router.replace({ pathname: '/scan/results/[scanId]', params: { scanId: scan.id } });
     }
 
@@ -146,7 +146,6 @@ function ScanRun({ onEmpty }: RunProps) {
   );
 }
 
-/** Processing: named stages, then results; or "Nothing recognised" when the scan finds nothing. */
 export function ProcessingScreen() {
   const [runId, setRunId] = useState(0);
   const [empty, setEmpty] = useState(false);

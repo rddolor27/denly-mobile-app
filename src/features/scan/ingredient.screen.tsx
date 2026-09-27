@@ -20,9 +20,10 @@ import {
   ingredientName,
   isIngredientId,
 } from '@/features/demo/demo-state';
+import { Toast } from '@/features/toast/Toast';
+import { useToast } from '@/features/toast/use-toast';
 
 import { DefinitionList, NoteBox, SaveToggle, type Definition } from './ScanParts';
-import { Toast, useToast } from './Toast';
 
 function goBack(): void {
   if (router.canGoBack()) router.back();
@@ -78,8 +79,8 @@ function IngredientDetail({ id, scanId }: { id: IngredientId; scanId: string | u
         </View>
         {band ? <ConfidenceLabel band={band} variant="pill" suffix="in this scan" /> : null}
         {band === 'uncertain' ? (
-          <NoteBox className="items-center py-2.5">
-            <Icon as={CircleQuestionMark} size={18} className="text-muted-foreground" />
+          <NoteBox className="items-center gap-2.5 px-3.5 py-2.5">
+            <Icon as={CircleQuestionMark} size={18} className="text-foreground" />
             <Text className="flex-1 text-subhead">Uncertain. Rescan closer to confirm it.</Text>
           </NoteBox>
         ) : null}
@@ -116,7 +117,7 @@ function IngredientDetail({ id, scanId }: { id: IngredientId; scanId: string | u
   );
 }
 
-/** Ingredient detail. `scanId` (optional search param) adds the band pill for that scan. */
+/** The optional `scanId` search param adds the band pill for that scan. */
 export function IngredientScreen() {
   const params = useLocalSearchParams<{ id: string; scanId?: string }>();
   const id = typeof params.id === 'string' && isIngredientId(params.id) ? params.id : undefined;
