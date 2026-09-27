@@ -1,0 +1,118 @@
+name: Build Production (release)
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: build-production
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    name: Validate release tag
+    if: ${{ !github.event.release.prerelease }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Check release tag matches app.json version
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: |
+          tag="$RELEASE_TAG"
+          if [[ ! "$tag" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::Release tag '$tag' is not a vMAJOR.MINOR.PATCH tag. Bump \`expo.version\` in app.json, then create the GitHub Release with tag 'v<that version>'."
+            exit 1
+          fi
+          app_version=$(node -p "require('./app.json').expo.version")
+          expected="v${app_version}"
+          if [ "$tag" != "$expected" ]; then
+            echo "::error::Release tag '$tag' does not match app.json's expo.version ('$app_version', expected tag '$expected'). Bump expo.version in app.json to match before releasing, or fix the tag."
+            exit 1
+          fi
+
+  ci:
+    name: CI
+    needs: validate
+    uses: ./.github/workflows/ci.yml
+    permissions:
+      contents: read
+
+  build:
+    name: EAS build (production, all platforms)
+    needs: ci
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: production
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Resolve pnpm version
+        id: pnpm-version
+        run: |
+          version=$(node -p "(require('./package.json').packageManager || '').split('@')[1] || ''")
+          if [ -z "$version" ]; then
+            version=10
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+        with:
+          version: ${{ steps.pnpm-version.outputs.version }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '24'
+          cache: pnpm
+
+      # expo-github-action installs the EAS CLI via the given packager; default is yarn,
+      # this repo uses pnpm (ADR 0013 / .claude/CLAUDE.md), so packager is set explicitly.
+      - name: Setup EAS
+        uses: expo/expo-github-action@eab7a230208c952974db8c3245cfd78402c7b385 # 9.0.0
+        with:
+          eas-version: latest
+          packager: pnpm
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # No `eas submit`: store submission waits on open decision #2 (YOLOv8 licence route).
+      - name: EAS build (production)
+        shell: bash
+        run: |
+          set -o pipefail
+          eas build --platform all --profile production --non-interactive --no-wait | tee eas-build-output.txt
+
+      - name: Write summary
+        if: always()
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: |
+          {
+            echo "## Production build"
+            echo ""
+            echo "- Release tag: \`$RELEASE_TAG\`"
+            echo "- Commit: \`$(git rev-parse HEAD)\`"
+            echo ""
+            echo "### EAS builds"
+          } >> "$GITHUB_STEP_SUMMARY"
+          links=$(grep -Eo 'https://expo\.dev\S*' eas-build-output.txt 2>/dev/null || true)
+          if [ -n "$links" ]; then
+            while read -r link; do echo "- $link"; done <<< "$links" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "- (no build link captured — see the EAS build step log above)" >> "$GITHUB_STEP_SUMMARY"
+          fi
+          {
+            echo ""
+            echo "_Not submitted to the stores (open decision #2 — YOLOv8 licence)._"
+          } >> "$GITHUB_STEP_SUMMARY"
