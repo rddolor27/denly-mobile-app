@@ -29,6 +29,8 @@ export type ThemeColors = {
   border: string;
   input: string;
   ring: string;
+  /** Dashed borders and the sheet grabber. */
+  dash: string;
   /** Black "What's on your counter?" card. */
   hero: string;
   heroForeground: string;
@@ -75,6 +77,7 @@ export const THEME: Readonly<Record<ColorScheme, Readonly<ThemeColors>>> = {
     border: '#DCE0D5',
     input: '#DCE0D5',
     ring: '#A1305A',
+    dash: '#C9CEC2',
     hero: '#1E211B',
     heroForeground: '#FFFFFF',
     camera: '#1E211B',
@@ -111,6 +114,7 @@ export const THEME: Readonly<Record<ColorScheme, Readonly<ThemeColors>>> = {
     border: '#2F352B',
     input: '#2F352B',
     ring: '#F09AB9',
+    dash: '#3D4439',
     hero: '#262A22',
     heroForeground: '#FFFFFF',
     camera: '#1E211B',

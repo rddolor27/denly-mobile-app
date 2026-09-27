@@ -20,6 +20,7 @@ module.exports = {
         border: token('border'),
         input: token('input'),
         ring: token('ring'),
+        dash: token('dash'),
         background: token('background'),
         foreground: token('foreground'),
         primary: { DEFAULT: token('primary'), foreground: token('primary-foreground') },
