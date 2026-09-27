@@ -1,6 +1,6 @@
 /**
- * Client-side checks for the demo auth forms (copy from the prototype). They only help the
- * person fix typos: the real checks belong to the backend once auth exists (open decision #14).
+ * Client-side checks for the demo auth forms. They only help the person fix typos: the real
+ * checks belong to the backend once auth exists (open decision #14).
  */
 
 export type AuthFieldName = 'name' | 'email' | 'password';

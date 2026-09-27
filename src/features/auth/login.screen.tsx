@@ -7,15 +7,17 @@ import { Button } from '@/components/ui/button';
 import { Icon } from '@/components/ui/icon';
 import { Text } from '@/components/ui/text';
 import { useDemo } from '@/features/demo/demo-provider';
+import { useToast } from '@/features/toast/use-toast';
 
 import { firstInvalidField, hasErrors, validateLogin, type AuthErrors } from './auth-validation';
 import { AuthLayout, SocialSignIn, SwitchAuthLine } from './AuthLayout';
 import { FormField } from './FormField';
 import { usePasswordState } from './use-password-state';
 
-/** Log in (demo): validates like the prototype; the password "wrong" shows the form error. */
+/** The literal password "wrong" simulates a rejected login until real auth exists. */
 export function LoginScreen() {
   const { signIn } = useDemo();
+  const toast = useToast();
   const [email, setEmail] = useState('');
   const [password, setPassword] = usePasswordState();
   const [errors, setErrors] = useState<AuthErrors>({});
@@ -34,6 +36,7 @@ export function LoginScreen() {
     }
     setPassword('');
     signIn({ email: email.trim() });
+    toast.show('Logged in. Your history is synced.');
     router.replace('/(tabs)');
   }
 

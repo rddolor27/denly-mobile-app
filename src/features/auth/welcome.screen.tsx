@@ -11,6 +11,8 @@ import { Text } from '@/components/ui/text';
 import type { IngredientId } from '@/features/demo/demo-data';
 import { useDemo } from '@/features/demo/demo-provider';
 import { getIngredient } from '@/features/demo/demo-state';
+import { Toast } from '@/features/toast/Toast';
+import { useToast } from '@/features/toast/use-toast';
 
 const STACK_IDS: readonly IngredientId[] = ['kangkong', 'tomato', 'onion'];
 
@@ -29,13 +31,18 @@ function IconTile({ icon }: { icon: LucideIcon }) {
 /** First launch: what Denly does, then Create account / Log in / Continue without an account. */
 export function WelcomeScreen() {
   const { continueAsGuest } = useDemo();
+  const toast = useToast();
   const tiles = STACK_IDS.map((id) => {
     const ingredient = getIngredient(id);
     return { key: id, abbreviation: ingredient.abbreviation, color: ingredient.tileColor };
   });
 
   return (
-    <Screen edges={['top', 'bottom']} contentClassName="gap-[26px] px-6 pb-6 pt-10">
+    <Screen
+      edges={['top', 'bottom']}
+      contentClassName="gap-[26px] px-6 pb-6 pt-10"
+      footer={<Toast message={toast.message} />}
+    >
       <Text className="font-display text-title-2 text-primary">Denly</Text>
       <View className="gap-3.5">
         <Text role="heading" className="font-display text-[40px] leading-[44px]">
@@ -76,6 +83,7 @@ export function WelcomeScreen() {
           className="self-center"
           onPress={() => {
             continueAsGuest();
+            toast.show('You can create an account any time from Profile.');
             router.replace('/(tabs)');
           }}
         >

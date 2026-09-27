@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
 import { DEMO_USER } from '@/features/demo/demo-data';
 import { useDemo } from '@/features/demo/demo-provider';
+import { useToast } from '@/features/toast/use-toast';
 
 type Props = {
   title: string;
@@ -41,11 +42,13 @@ export function AuthLayout({ title, subtitle, back, children }: Props) {
   );
 }
 
-/** "or", then Continue with Apple / Google. Demo: both sign in as the demo user. */
+/** Demo stand-in until real social sign-in exists: both providers sign in as the demo user. */
 export function SocialSignIn() {
   const { signIn } = useDemo();
-  function continueWith(): void {
+  const toast = useToast();
+  function continueWith(provider: 'Apple' | 'Google'): void {
     signIn({ email: DEMO_USER.email });
+    toast.show(`Signed in with ${provider}.`);
     router.replace('/(tabs)');
   }
   return (
@@ -56,10 +59,10 @@ export function SocialSignIn() {
         <View className="h-hairline flex-1 bg-border" />
       </View>
       {/* Text-only buttons: lucide has no brand marks and we do not redraw them by hand. */}
-      <Button variant="outline" onPress={continueWith}>
+      <Button variant="outline" onPress={() => continueWith('Apple')}>
         <Text>Continue with Apple</Text>
       </Button>
-      <Button variant="outline" onPress={continueWith}>
+      <Button variant="outline" onPress={() => continueWith('Google')}>
         <Text>Continue with Google</Text>
       </Button>
     </View>

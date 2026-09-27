@@ -16,7 +16,7 @@ function backToLogin(): void {
   else router.replace('/(auth)/login');
 }
 
-/** Reset password (demo): email, then "Check your email". Nothing is sent. */
+/** Demo: nothing is actually sent behind "Check your email". */
 export function ForgotPasswordScreen() {
   const params = useLocalSearchParams<{ email?: string }>();
   const [email, setEmail] = useState(typeof params.email === 'string' ? params.email : '');

@@ -5,15 +5,16 @@ import { View, type TextInput } from 'react-native';
 import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
 import { useDemo } from '@/features/demo/demo-provider';
+import { useToast } from '@/features/toast/use-toast';
 
 import { firstInvalidField, hasErrors, validateRegister, type AuthErrors } from './auth-validation';
 import { AuthLayout, SocialSignIn, SwitchAuthLine } from './AuthLayout';
 import { FormField } from './FormField';
 import { usePasswordState } from './use-password-state';
 
-/** Create account (demo): name, email, password of at least 8 characters. */
 export function RegisterScreen() {
   const { signUp } = useDemo();
+  const toast = useToast();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = usePasswordState();
@@ -33,6 +34,7 @@ export function RegisterScreen() {
     }
     setPassword('');
     signUp({ name: name.trim(), email: email.trim() });
+    toast.show('Account created. Your scans on this phone are now in your history.');
     router.replace('/(tabs)');
   }
 

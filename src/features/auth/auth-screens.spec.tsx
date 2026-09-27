@@ -1,7 +1,7 @@
 import { screen, userEvent } from '@testing-library/react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 
-import { demoProbe, renderScreen } from '@/test/render-screen';
+import { demoProbe, renderScreen, toastProbe } from '@/test/render-screen';
 
 import { ForgotPasswordScreen } from './forgot-password.screen';
 import { LoginScreen } from './login.screen';
@@ -43,6 +43,7 @@ describe('WelcomeScreen', () => {
 
     expect(demoProbe.current?.session).toEqual({ kind: 'guest' });
     expect(router.replace).toHaveBeenCalledWith('/(tabs)');
+    expect(toastProbe.current).toBe('You can create an account any time from Profile.');
   });
 });
 
@@ -93,6 +94,7 @@ describe('LoginScreen', () => {
 
     expect(demoProbe.current?.session).toMatchObject({ kind: 'user', email: 'rica@example.com' });
     expect(router.replace).toHaveBeenCalledWith('/(tabs)');
+    expect(toastProbe.current).toBe('Logged in. Your history is synced.');
   });
 
   it('signs in with Apple or Google (demo)', async () => {
@@ -103,6 +105,7 @@ describe('LoginScreen', () => {
 
     expect(demoProbe.current?.session).toMatchObject({ kind: 'user' });
     expect(router.replace).toHaveBeenCalledWith('/(tabs)');
+    expect(toastProbe.current).toBe('Signed in with Google.');
   });
 });
 
@@ -133,6 +136,7 @@ describe('RegisterScreen', () => {
 
     expect(demoProbe.current?.session).toEqual({ kind: 'user', name: 'Rica Dela Cruz', email: 'rica@example.com' });
     expect(router.replace).toHaveBeenCalledWith('/(tabs)');
+    expect(toastProbe.current).toBe('Account created. Your scans on this phone are now in your history.');
   });
 });
 

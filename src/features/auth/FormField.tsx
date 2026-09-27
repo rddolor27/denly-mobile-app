@@ -19,10 +19,7 @@ type Props = Omit<InputProps, 'ref' | 'invalid' | 'secureTextEntry' | 'accessibi
   inputRef?: Ref<TextInput>;
 };
 
-/**
- * One labelled form field: Label, Input, and either the inline error or the help text under it.
- * The error is also the input's accessibility hint, so it is read with the field.
- */
+/** The error is also the input's accessibility hint, so it is read with the field. */
 export function FormField({ label, error, help, password = false, inputRef, ...inputProps }: Props) {
   const [revealed, setRevealed] = useState(false);
   const note = error ?? help;
