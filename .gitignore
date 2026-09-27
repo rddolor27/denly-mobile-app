@@ -1,0 +1,51 @@
+# dependencies
+node_modules/
+
+# Expo
+.expo/
+dist/
+web-build/
+expo-env.d.ts
+
+# Generated native folders (Continuous Native Generation — `expo prebuild` recreates them)
+/ios
+/android
+.kotlin/
+
+# Metro
+.metro-health-check*
+
+# Env files: never commit values; .env.example lists the names
+.env
+.env.*
+!.env.example
+
+# Signing material and secrets
+*.jks
+*.p8
+*.p12
+*.key
+*.pem
+*.mobileprovision
+*.cer
+secrets/
+
+# Model weights (fetched from the lock file at build time, never committed)
+*.mlmodel
+*.mlmodelc
+*.mlpackage
+*.pt
+*.onnx
+
+# Test output
+coverage/
+
+# debug
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+*.orig.*
+
+# OS / tooling
+.DS_Store
+*.tsbuildinfo

@@ -1,0 +1,50 @@
+{
+  "expo": {
+    "name": "Denly",
+    "slug": "denly-mobile",
+    "version": "0.1.0",
+    "platforms": [
+      "ios",
+      "android"
+    ],
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "denly",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "bundleIdentifier": "app.denly.mobile",
+      "supportsTablet": false,
+      "config": {
+        "usesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "package": "app.denly.mobile",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/icon.png",
+        "backgroundColor": "#F4F5F0"
+      }
+    },
+    "plugins": [
+      "expo-router",
+      "./plugins/with-short-native-build-dirs.js",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#F4F5F0",
+          "image": "./assets/images/splash-icon.png",
+          "imageWidth": 76,
+          "dark": {
+            "backgroundColor": "#111410"
+          }
+        }
+      ],
+      "expo-font",
+      "expo-sqlite"
+    ],
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    }
+  }
+}
