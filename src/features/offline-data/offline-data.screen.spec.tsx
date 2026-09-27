@@ -1,5 +1,9 @@
 import { act, screen, userEvent } from '@testing-library/react-native';
+import { useState } from 'react';
+import { Pressable } from 'react-native';
 
+import { Toast } from '@/features/toast/Toast';
+import { useToast } from '@/features/toast/use-toast';
 import { renderWithDemo } from '@/test-utils/render-with-demo';
 
 import { OfflineDataScreen } from './offline-data.screen';
@@ -69,6 +73,30 @@ describe('OfflineDataScreen', () => {
     await act(() => jest.advanceTimersByTime(FULL_DOWNLOAD_MS + VERIFY_MS));
     expect(screen.getByRole('radio', { name: /^Medium.*Installed/ })).toBeOnTheScreen();
     expect(screen.queryByText('Small offline data installed.')).toBeNull();
+  });
+
+  it('keeps downloading after leaving the screen and installs', async () => {
+    function Leavable() {
+      const [open, setOpen] = useState(true);
+      const toast = useToast();
+      return (
+        <>
+          {open ? <OfflineDataScreen /> : null}
+          <Pressable accessibilityRole="button" accessibilityLabel="Leave" onPress={() => setOpen(false)} />
+          <Toast message={toast.message} />
+        </>
+      );
+    }
+    const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
+    await renderWithDemo(<Leavable />);
+
+    await user.press(screen.getByRole('radio', { name: /^Large/ }));
+    await user.press(screen.getByRole('button', { name: 'Download Large' }));
+    await user.press(screen.getByRole('button', { name: 'Leave' }));
+    expect(screen.queryByText('Downloading Large…')).toBeNull();
+
+    await act(() => jest.advanceTimersByTime(FULL_DOWNLOAD_MS + VERIFY_MS));
+    expect(screen.getByText('Large offline data installed.')).toBeOnTheScreen();
   });
 
   it('cannot download while offline', async () => {

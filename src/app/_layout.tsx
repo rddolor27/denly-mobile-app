@@ -14,6 +14,8 @@ import { useEffect } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { DemoProvider } from '@/features/demo/demo-provider';
+import { PackDownloadProvider } from '@/features/offline-data/PackDownloadProvider';
+import { ToastProvider } from '@/features/toast/ToastProvider';
 import { logger } from '@/lib/logger';
 import { queryClient, wireQueryFocusToAppState } from '@/lib/query-client';
 import { NAV_THEME, THEME } from '@/lib/theme';
@@ -49,16 +51,20 @@ export default function RootLayout() {
     <SafeAreaProvider>
       <QueryClientProvider client={queryClient}>
         <DemoProvider>
-          <ThemeProvider value={NAV_THEME[colorScheme]}>
-            <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
-            <Stack screenOptions={{ headerShown: false }}>
-              <Stack.Screen name="index" options={{ animation: 'none' }} />
-              <Stack.Screen name="(auth)" options={{ animation: 'fade' }} />
-              <Stack.Screen name="(tabs)" options={{ animation: 'fade' }} />
-              <Stack.Screen name="scan" options={{ animation: 'slide_from_bottom' }} />
-            </Stack>
-            <PortalHost />
-          </ThemeProvider>
+          <ToastProvider>
+            <PackDownloadProvider>
+              <ThemeProvider value={NAV_THEME[colorScheme]}>
+                <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
+                <Stack screenOptions={{ headerShown: false }}>
+                  <Stack.Screen name="index" options={{ animation: 'none' }} />
+                  <Stack.Screen name="(auth)" options={{ animation: 'fade' }} />
+                  <Stack.Screen name="(tabs)" options={{ animation: 'fade' }} />
+                  <Stack.Screen name="scan" options={{ animation: 'slide_from_bottom' }} />
+                </Stack>
+                <PortalHost />
+              </ThemeProvider>
+            </PackDownloadProvider>
+          </ToastProvider>
         </DemoProvider>
       </QueryClientProvider>
     </SafeAreaProvider>

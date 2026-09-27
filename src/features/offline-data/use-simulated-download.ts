@@ -2,10 +2,9 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import type { PackTier } from '@/features/demo/demo-data';
 
-/** Progress added per tick (the prototype's 7% every 180 ms: about 2.7 s to 100%). */
+/** Percent added per tick. */
 export const DOWNLOAD_STEP = 7;
 export const DOWNLOAD_TICK_MS = 180;
-/** "Checking the download…" before the pack is swapped in. */
 export const VERIFY_MS = 900;
 
 export type DownloadState = {
@@ -23,9 +22,8 @@ export type SimulatedDownload = {
 };
 
 /**
- * DEMO: a fake pack download (no network). Ticks progress to 100, "checks" it, then calls
- * `onInstalled`. Every timer is cleared on cancel and on unmount, so leaving the screen
- * mid-download installs nothing. The real flow (manifest, SHA-256, atomic swap) replaces this.
+ * A fake pack download (no network), owned by `PackDownloadProvider`. Timers are cleared on
+ * cancel and unmount. The real flow (manifest, SHA-256, atomic swap) replaces this.
  */
 export function useSimulatedDownload(onInstalled: (tier: PackTier) => void): SimulatedDownload {
   const [download, setDownload] = useState<DownloadState | null>(null);

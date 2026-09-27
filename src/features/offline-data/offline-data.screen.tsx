@@ -17,7 +17,8 @@ import { useDemo } from '@/features/demo/demo-provider';
 import { Toast } from '@/features/toast/Toast';
 import { useToast } from '@/features/toast/use-toast';
 
-import { useSimulatedDownload, type DownloadState } from './use-simulated-download';
+import { usePackDownload } from './PackDownloadProvider';
+import type { DownloadState } from './use-simulated-download';
 
 function goBack(): void {
   if (router.canGoBack()) router.back();
@@ -50,15 +51,11 @@ function DownloadProgressCard({ download, installedLabel, onCancel }: ProgressCa
   );
 }
 
-/** Offline data (prototype `offlineData`): pick a tier, download it (simulated), or remove it. */
 export function OfflineDataScreen() {
   const { online, pack, setPack } = useDemo();
   const toast = useToast();
-  const [selected, setSelected] = useState<PackTier>(pack === 'none' ? 'medium' : pack);
-  const { download, start, cancel } = useSimulatedDownload((tier) => {
-    setPack(tier);
-    toast.show(`${TIERS[tier].label} offline data installed.`);
-  });
+  const { download, start, cancel } = usePackDownload();
+  const [selected, setSelected] = useState<PackTier>(download?.tier ?? (pack === 'none' ? 'medium' : pack));
   const installedLabel = pack === 'none' ? null : TIERS[pack].label;
 
   function action() {

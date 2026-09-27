@@ -1,7 +1,5 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { AccessibilityInfo } from 'react-native';
+import { createContext, useContext } from 'react';
 
-/** How long a toast stays on screen (the prototype's 3 s). */
 export const TOAST_DURATION_MS = 3000;
 
 export type ToastState = {
@@ -11,31 +9,15 @@ export type ToastState = {
   show: (message: string) => void;
 };
 
+export const ToastContext = createContext<ToastState | null>(null);
+
 /**
- * A screen-local transient message ("Pinakbet saved.", "Offline data removed."). One per screen;
- * the timer is cleared on unmount. Render it with `<Toast message={toast.message} />`.
+ * The app-wide toast. It lives above the navigators so a confirmation shown right before
+ * navigating ("Logged in.") still appears on the next screen; each screen renders
+ * `<Toast message={toast.message} />` where it fits its layout.
  */
 export function useToast(): ToastState {
-  const [message, setMessage] = useState<string | null>(null);
-  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  useEffect(
-    () => () => {
-      if (timer.current) clearTimeout(timer.current);
-    },
-    [],
-  );
-
-  const show = useCallback((next: string) => {
-    if (timer.current) clearTimeout(timer.current);
-    setMessage(next);
-    // iOS has no live regions; Android reads the polite live region on the toast itself.
-    AccessibilityInfo.announceForAccessibility(next);
-    timer.current = setTimeout(() => {
-      timer.current = null;
-      setMessage(null);
-    }, TOAST_DURATION_MS);
-  }, []);
-
-  return { message, show };
+  const value = useContext(ToastContext);
+  if (value === null) throw new Error('useToast() must be used inside <ToastProvider>');
+  return value;
 }

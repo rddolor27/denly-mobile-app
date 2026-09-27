@@ -9,8 +9,8 @@ export type ToastProps = {
 };
 
 /**
- * The toast from the prototype: an inverted pill pinned above the bottom of the screen (above
- * the tab bar on tab screens). It never takes touches, so it cannot block the content under it.
+ * An inverted pill pinned above the bottom of the screen (above the tab bar on tab screens).
+ * `pointerEvents="none"` so it never blocks touches on the content underneath.
  */
 export function Toast({ message, className }: ToastProps) {
   if (message === null) return null;
