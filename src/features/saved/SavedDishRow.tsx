@@ -9,10 +9,7 @@ type Props = {
   onMessage: (message: string) => void;
 };
 
-/**
- * A `DishRow` wired to the demo state: the bookmark toggles the saved dish. Recipes are not in
- * the data yet, so opening a dish says so (the prototype's toast).
- */
+/** Recipes are not in the data yet, so opening a dish says so instead of navigating anywhere. */
 export function SavedDishRow({ dishId, onMessage }: Props) {
   const { savedDishIds, toggleSaveDish } = useDemo();
   const dish = getDish(dishId);

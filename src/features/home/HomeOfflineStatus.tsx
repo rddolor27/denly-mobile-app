@@ -11,10 +11,6 @@ function openOfflineData(): void {
   router.push('/settings/offline-data');
 }
 
-/**
- * Home's connection line (prototype `offlineStatus`): offline banners when there is no
- * connection, otherwise a row that says whether offline data is ready or offers to download it.
- */
 export function HomeOfflineStatus() {
   const { online, pack } = useDemo();
 

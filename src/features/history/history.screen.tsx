@@ -15,7 +15,6 @@ import { HistoryScanRow } from './HistoryScanRow';
 
 type HistoryFilter = 'all' | 'saved';
 
-/** History (prototype `history`): every scan grouped by day, or only the saved ones. */
 export function HistoryScreen() {
   const { session, history, savedScanIds } = useDemo();
   const [filter, setFilter] = useState<HistoryFilter>('all');

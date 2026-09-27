@@ -41,7 +41,6 @@ function exampleNames(language: NameLanguage): string {
   return [first, ...rest.map((name) => name.toLowerCase())].join(', ');
 }
 
-/** Profile (prototype `profile`): account, preferences, privacy, and the demo controls. */
 export function ProfileScreen() {
   const demo = useDemo();
   const { preference, setPreference } = useAppearance();
@@ -150,8 +149,8 @@ export function ProfileScreen() {
 
       <View className="gap-2">
         <SectionHeader title="Privacy" variant="small" />
-        <View className="flex-row gap-3 rounded-lg bg-card p-4">
-          <Icon as={Lock} size={18} className="mt-0.5 text-muted-foreground" />
+        <View className="flex-row gap-3 rounded-lg bg-muted px-4 py-3.5">
+          <Icon as={Lock} size={16} className="mt-0.5 text-muted-foreground" />
           <Text className="flex-1 text-subhead">
             {user
               ? 'Photos never leave your phone. Denly stores the ingredient names from your scans so your history syncs.'
@@ -172,6 +171,7 @@ export function ProfileScreen() {
         onConfirm={() => {
           setConfirmDelete(false);
           demo.deleteAccount();
+          toast.show('Your account was deleted.');
           router.replace('/(auth)/welcome');
         }}
       />

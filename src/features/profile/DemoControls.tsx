@@ -29,10 +29,7 @@ const OUTCOMES: readonly SettingOption<ScanOutcome>[] = [
   { value: 'slow', label: 'Slow' },
 ];
 
-/**
- * The prototype's side panel, inside the app: switches the example data so every state can be
- * reached on a phone. Not part of the product; removed with the demo provider.
- */
+/** Switches the example data so every state can be reached on a phone. Not part of the product; removed with the demo provider. */
 export function DemoControls() {
   const { online, pack, nextOutcome, setOnline, setPack, setNextOutcome } = useDemo();
   return (

@@ -9,7 +9,7 @@ import { LargeTitle } from '@/components/denly/ScreenHeader';
 import { Text } from '@/components/ui/text';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { useDemo } from '@/features/demo/demo-provider';
-import { alternateName, getIngredient, hasRichData, ingredientName } from '@/features/demo/demo-state';
+import { alternateName, getIngredient, ingredientName } from '@/features/demo/demo-state';
 import { HistoryScanRow } from '@/features/history/HistoryScanRow';
 import { Toast } from '@/features/toast/Toast';
 import { useToast } from '@/features/toast/use-toast';
@@ -32,11 +32,7 @@ function openCamera(): void {
   router.push('/scan/camera');
 }
 
-/**
- * Saved (prototype `saved`): dishes, ingredients and scans the person kept. An optional `tab`
- * search param picks the segment (Home's "See all" opens Dishes); it is cleared once applied so
- * the same link works again after the person switches segments.
- */
+/** An optional `tab` search param picks the segment (Home's "See all" opens Dishes); cleared once applied so the same link works again after the person switches segments. */
 export function SavedScreen() {
   const demo = useDemo();
   const toast = useToast();
@@ -54,7 +50,6 @@ export function SavedScreen() {
     if (tabParam !== undefined) router.setParams({ tab: undefined });
   }, [tabParam]);
 
-  const rich = hasRichData(demo);
   const savedScans = demo.history.filter((scan) => demo.savedScanIds.includes(scan.id));
 
   function body() {
@@ -86,7 +81,7 @@ export function SavedScreen() {
                 alternateName={alternateName(id, demo.nameLanguage)}
                 abbreviation={ingredient.abbreviation}
                 tileColor={ingredient.tileColor}
-                {...(rich ? { category: ingredient.category } : {})}
+                category={ingredient.category}
                 onPress={() => router.push({ pathname: '/scan/ingredient/[id]', params: { id } })}
               />
             );

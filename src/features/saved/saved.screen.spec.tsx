@@ -44,6 +44,13 @@ describe('SavedScreen', () => {
     expect(router.push).toHaveBeenCalledWith({ pathname: '/scan/ingredient/[id]', params: { id: 'kangkong' } });
   });
 
+  it('shows the ingredient category even offline with no pack', async () => {
+    params.mockReturnValue({ tab: 'ingredients' });
+    await renderWithDemo(<SavedScreen />, { online: false, pack: 'none' });
+
+    expect(screen.getByRole('button', { name: 'Kangkong, Water spinach, Leafy green' })).toBeOnTheScreen();
+  });
+
   it('lists saved scans', async () => {
     const user = userEvent.setup();
     await renderWithDemo(<SavedScreen />);

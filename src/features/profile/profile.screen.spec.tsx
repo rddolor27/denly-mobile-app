@@ -75,6 +75,7 @@ describe('ProfileScreen', () => {
 
     expect(router.replace).toHaveBeenCalledWith('/(auth)/welcome');
     expect(screen.queryByText('Rica Dela Cruz')).toBeNull();
+    expect(screen.getByText('Your account was deleted.')).toBeOnTheScreen();
   });
 
   it('keeps the account when the deletion is cancelled', async () => {

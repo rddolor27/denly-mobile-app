@@ -18,7 +18,6 @@ import { useToast } from '@/features/toast/use-toast';
 
 import { HomeOfflineStatus } from './HomeOfflineStatus';
 
-/** Home (prototype `home`): greeting, the counter card, offline status, recent scans, saved dishes. */
 export function HomeScreen() {
   const { session, history, savedDishIds } = useDemo();
   const toast = useToast();
@@ -85,7 +84,7 @@ export function HomeScreen() {
             ))}
           </ListGroup>
         ) : (
-          <View className="rounded-lg border border-dashed border-border p-4">
+          <View className="rounded-lg border border-dashed border-dash p-4">
             <Text variant="subhead">Dishes you save from a scan show up here.</Text>
           </View>
         )}

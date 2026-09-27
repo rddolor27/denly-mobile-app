@@ -16,7 +16,6 @@ type Props = {
   onConfirm: () => void;
 };
 
-/** The Delete account confirmation sheet (prototype `sheetHtml`). */
 export function DeleteAccountDialog({ open, onOpenChange, onConfirm }: Props) {
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
