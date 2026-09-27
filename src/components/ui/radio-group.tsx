@@ -6,8 +6,9 @@ import { cn } from '@/lib/utils';
 
 /**
  * React Native Reusables `RadioGroup`, restyled to Denly's tier rows: the whole row is the radio
- * (a 22pt ring on the left, pink when checked), so the touch target is the row, not the dot.
- * Rows sit inside a card list; `RadioGroupItem` renders the ring and then its children.
+ * (a 22pt ring on the left; checked thickens the ring to a 7px primary border, no inner dot), so
+ * the touch target is the row, not the ring. Rows sit inside a card list; `RadioGroupItem` renders
+ * the ring and then its children.
  */
 const RadioValueContext = React.createContext<string | undefined>(undefined);
 
@@ -46,12 +47,10 @@ function RadioGroupItem({
     >
       <View
         className={cn(
-          'mt-px size-[22px] shrink-0 items-center justify-center rounded-full border-2',
-          selected ? 'border-primary' : 'border-muted-foreground',
+          'mt-px size-[22px] shrink-0 rounded-full',
+          selected ? 'border-[7px] border-primary' : 'border-2 border-muted-foreground',
         )}
-      >
-        <RadioGroupPrimitive.Indicator className="size-2.5 rounded-full bg-primary" />
-      </View>
+      />
       {children}
     </RadioGroupPrimitive.Item>
   );

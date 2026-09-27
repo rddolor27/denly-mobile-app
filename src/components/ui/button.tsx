@@ -6,10 +6,10 @@ import { cn } from '@/lib/utils';
 
 /**
  * React Native Reusables `Button`, restyled to Denly: 52pt pill buttons, one primary per
- * screen. Variants map to the prototype: `default` = primary (pink), `secondary` = tinted
- * (Rescan), `outline` = card with border (Log in), `destructive` = Delete account, `ghost` =
- * pressed-row look, `link` = text button (44pt tall, pink text). Press feedback is a colour change
- * only (no scale), so it is Reduce Motion safe.
+ * screen. Variants: `default` = primary (pink), `secondary` = tinted (Rescan), `outline` = card
+ * with border (Log in), `destructive` = Delete account, `ghost` = pressed-row look, `link` = text
+ * button (44pt tall, pink text). Press feedback is a colour change only (no scale), so it stays
+ * Reduce Motion safe.
  */
 const buttonVariants = cva('group shrink-0 flex-row items-center justify-center gap-2.5', {
   variants: {

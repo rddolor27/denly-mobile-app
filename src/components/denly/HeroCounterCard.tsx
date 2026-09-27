@@ -6,8 +6,8 @@ import { Icon } from '@/components/ui/icon';
 import { Text } from '@/components/ui/text';
 
 /**
- * Produce shapes on the counter (kangkong leaves, tomato, onion, chili) from the prototype.
- * Presentation-only colours, fixed in both modes like the card itself.
+ * Produce shapes on the counter (kangkong leaves, tomato, onion, chili): presentation-only
+ * colours, fixed in both modes like the card itself.
  */
 const SHAPES: readonly ViewStyle[] = [
   { right: -10, top: 14, width: 150, height: 40, backgroundColor: '#3F5A2E', transform: [{ rotate: '-16deg' }] },

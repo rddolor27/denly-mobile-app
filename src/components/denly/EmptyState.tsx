@@ -18,7 +18,7 @@ export type EmptyStateProps = {
 /** A dashed placeholder card that says what is missing and invites one action. */
 export function EmptyState({ title, body, actionLabel, onAction, className }: EmptyStateProps) {
   return (
-    <View className={cn('gap-2 rounded-lg border border-dashed border-border p-4', className)}>
+    <View className={cn('gap-1.5 rounded-lg border border-dashed border-dash p-4', className)}>
       <Text variant="headline" role="heading">
         {title}
       </Text>

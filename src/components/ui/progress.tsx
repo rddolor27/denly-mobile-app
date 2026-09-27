@@ -1,5 +1,6 @@
 import * as ProgressPrimitive from '@rn-primitives/progress';
 import Animated, {
+  Easing,
   Extrapolation,
   interpolate,
   ReduceMotion,
@@ -16,7 +17,7 @@ type ProgressProps = React.ComponentProps<typeof ProgressPrimitive.Root> & {
 
 /**
  * React Native Reusables `Progress`, restyled to Denly's download bar: 6pt, tinted track, pink
- * fill. The fill eases (200ms linear, like the prototype) and jumps when Reduce Motion is on.
+ * fill. The fill eases linearly over 200ms and jumps instead when Reduce Motion is on.
  * Give it an `aria-label` ("Download progress").
  */
 function Progress({ className, value, indicatorClassName, ...props }: ProgressProps) {
@@ -37,7 +38,11 @@ function Indicator({ value, className }: { value: number | null | undefined; cla
   const indicator = useAnimatedStyle(() => {
     const percent = interpolate(progress.value, [0, 100], [0, 100], Extrapolation.CLAMP);
     return {
-      width: withTiming(`${percent}%`, { duration: 200, reduceMotion: ReduceMotion.System }),
+      width: withTiming(`${percent}%`, {
+        duration: 200,
+        easing: Easing.linear,
+        reduceMotion: ReduceMotion.System,
+      }),
     };
   }, [value]);
 

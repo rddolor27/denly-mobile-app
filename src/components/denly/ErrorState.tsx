@@ -33,7 +33,7 @@ export function ErrorState({
 }: ErrorStateProps) {
   return (
     <View
-      className={cn('gap-2 rounded-lg border border-dashed border-border p-4', className)}
+      className={cn('gap-1.5 rounded-lg border border-dashed border-dash p-4', className)}
       role="alert"
       accessibilityLiveRegion="polite"
     >

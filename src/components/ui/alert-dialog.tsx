@@ -70,7 +70,7 @@ function AlertDialogContent({
             {...props}
           >
             <View
-              className="h-[5px] w-9 self-center rounded-full bg-border"
+              className="h-[5px] w-9 self-center rounded-full bg-dash"
               accessibilityElementsHidden
               importantForAccessibility="no-hide-descendants"
             />
