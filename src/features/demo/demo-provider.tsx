@@ -10,9 +10,9 @@ import {
 } from './demo-state';
 
 /**
- * DEMO PROVIDER — the prototype's state for the frontend-only app, in memory. Screens read and
- * change it only through `useDemo()`; when the backend and real auth exist, this is replaced by
- * TanStack Query hooks and an auth session, screen by screen.
+ * In-memory state for the frontend-only app. Screens read and change it only through
+ * `useDemo()`; when the backend and real auth exist, this is replaced by TanStack Query hooks
+ * and an auth session, screen by screen.
  */
 export type DemoActions = {
   signIn: (input: { email: string; name?: string }) => void;

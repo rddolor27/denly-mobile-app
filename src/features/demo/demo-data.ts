@@ -1,8 +1,7 @@
 /**
- * DEMO DATA — example content copied from the clickable prototype (design/0001, plan 0003). The
- * app is frontend-only for now: nothing here comes from the backend or the ingredient data
- * contract. Replace with TanStack Query hooks and the offline pack when those exist; screens
- * should read it only through `useDemo()` so the swap stays in one place.
+ * Example content for the frontend-only app: nothing here comes from the backend or the
+ * ingredient data contract. Replace with TanStack Query hooks and the offline pack when those
+ * exist; screens read it only through `useDemo()` so the swap stays in one place.
  */
 
 export type NameLanguage = 'tl' | 'en' | 'ceb';
@@ -190,7 +189,7 @@ export type DemoScan = {
 export const KITCHEN_SUMMARY =
   'This looks like the start of adobong kangkong or sinigang. Kangkong cooks in a few minutes. Tomato and onion add sweetness and body, and garlic is the usual base for the sauté.';
 
-/** The prototype's standard scan (kangkong, tomato, onion, garlic, chili + one unknown). */
+/** Standard demo scan: kangkong, tomato, onion, garlic, chili + one unknown. */
 export function kitchenScan(id: string, when: string, offline: boolean): DemoScan {
   return {
     id,

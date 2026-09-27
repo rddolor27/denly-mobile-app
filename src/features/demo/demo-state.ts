@@ -16,8 +16,8 @@ import {
 } from './demo-data';
 
 /**
- * DEMO STATE — the prototype's app state as a pure reducer (memory only, reset on relaunch).
- * The session is a local stub: open decision #14 (auth method) comes before real login.
+ * App state as a pure reducer (memory only, reset on relaunch). The session is a local stub:
+ * open decision #14 (auth method) comes before real login.
  */
 
 export type DemoUser = { name: string; email: string };
@@ -25,7 +25,7 @@ export type DemoUser = { name: string; email: string };
 /** `null` = first launch, nobody has chosen yet (the app opens on Welcome). */
 export type Session = { kind: 'guest' } | ({ kind: 'user' } & DemoUser) | null;
 
-/** What the next simulated scan returns (the prototype's "What the next scan finds"). */
+/** What the next simulated scan returns. */
 export type ScanOutcome = 'found' | 'empty' | 'nosummary' | 'slow';
 
 export type DemoState = {
@@ -206,7 +206,7 @@ export function initials(name: string): string {
     .join('');
 }
 
-/** Filipino greeting by time of day, as in the prototype. */
+/** Filipino greeting by time of day. */
 export function greeting(date: Date): string {
   const hour = date.getHours();
   if (hour < 12) return 'Magandang umaga';
