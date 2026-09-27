@@ -5,10 +5,11 @@ areas 47 pt top / 34 pt bottom). This repo is independent of `../denly-backend` 
 backend only through its HTTP API. Never import from it; never add a monorepo.
 
 Scaffolded 2026-09-23. Frontend only, example data: NativeWind theme + React Native Reusables kit
-+ Denly components (plan 0003 phases 1–2, ADR 0009), the in-memory demo store
-(`src/features/demo/`, `useDemo()`), placeholder routes for every screen, the typed API client
-(not called yet) and the detector port types. No camera, detector adapter or offline data yet —
-add each only when asked.
++ Denly components (plan 0003, ADR 0009) and every screen of the clickable prototype
+(https://claude.ai/artifact/CqH9SLrozEcZYPLMcZApQJ) with its states, driven by the in-memory demo
+store (`src/features/demo/`, `useDemo()`; Profile → demo controls switch connection, pack and
+scan outcome). Also the typed API client (not called yet) and the detector port types. No real
+camera, detector adapter, backend calls or offline data packs yet — add each only when asked.
 
 ## Stack (as built)
 
@@ -41,7 +42,8 @@ add each only when asked.
   message, requestId }`, every response checked by a hand-written type guard (schema library is
   open decision #11). The base URL includes the backend's `/api` prefix (ADR 0012), so the client
   calls `/health` and `/v1/...` relative to it; the contract is the backend's OpenAPI at
-  `/api/docs-json`. Auth (ADR 0012): refresh token in the Keychain (`expo-secure-store`), access
+  `/api/docs-json`. Only `health()` exists and no screen calls it yet. Auth (ADR 0012, planned,
+  not built): refresh token in the Keychain (`expo-secure-store`, not installed yet), access
   token in memory, one in-flight refresh at a time (a replayed refresh token signs the user out).
 - Package manager: **pnpm 10** with `node-linker=hoisted` (`.npmrc`; Metro needs a flat
   `node_modules`) · Node ≥ 24
@@ -77,6 +79,12 @@ eas build --profile development|preview --platform ios   # needs eas login — n
 This machine is Windows: no Xcode, no simulator. Verify with typecheck, lint, test, doctor and
 `export:ios`; native builds go through EAS or a Mac.
 
+CI/CD (ADR 0013, GitHub Actions, all third-party actions pinned to a commit SHA): `CI` on every PR
+and push to `main`; `Build Production (release)` on a published GitHub Release (tag must equal
+`v` + `app.json` `expo.version`) runs an EAS production build (no `eas submit`); `Build Preview
+(manual)` (`workflow_dispatch`) runs an EAS preview build against a chosen ref/platform. Details
+and one-time setup in `README.md`.
+
 ## Layout
 
 ```
@@ -84,11 +92,14 @@ src/
   app/                  Expo Router routes: _layout.tsx (fonts, appearance, providers, PortalHost),
                         index.tsx (redirect), (auth)/, (tabs)/ (custom TabBar), scan/, settings/, design.tsx
   features/<feature>/   <name>.screen.tsx, components/, hooks/, (api/, types/, utils/ when needed)
-  features/demo/        DEMO data + in-memory store (DemoProvider/useDemo) + PlaceholderScreen (temporary)
+  features/demo/        example data + in-memory store (DemoProvider/useDemo), replaced screen by screen
+                        by TanStack Query hooks and the auth session
+  features/toast/       the one toast (useToast + Toast) every screen uses
+  features/scan/        camera (simulated viewfinder), processing, results, ingredient detail
   features/scan/detection/  detector port (IngredientDetector, DetectionRun, DetectionResult) — the adapter
                         added here later is the only code that knows YOLO / Core ML exist
   features/scan/intelligence/  (later) offline evaluator over the data pack — must pass the conformance suite
-  features/offline-data/    (later) tier picker, download, verify, install, update, delete
+  features/offline-data/    tier picker with a simulated download; verify, install, update come later
   components/ui/        React Native Reusables components, restyled to Denly
   components/denly/     Denly components (rows, tiles, ConfidenceLabel, HeroCounterCard, TabBar, Screen, …)
   lib/                  config.ts, logger.ts, query-client.ts, api/, theme.ts (tokens + NAV_THEME), utils.ts (cn),
@@ -115,5 +126,6 @@ them as routes).
 - Accessibility is a requirement: labels, roles, 44 pt targets, Dynamic Type, non-colour signals.
 - Env names live in `.env.example` (`EXPO_PUBLIC_API_URL`); env is read only in
   `src/lib/config.ts`; no secrets in the bundle. Logging only through `src/lib/logger.ts`.
-- Theme values are neutral placeholders (ui-ux skill §7); change values, never role names, when
-  the brand is decided.
+- The palette is decided (ADR 0009): change token values in `global.css` and `lib/theme.ts`
+  together, never role names; the sync and contrast specs guard both.
+- Comments explain a non-obvious why only; don't point at prototype internals or restate code.
